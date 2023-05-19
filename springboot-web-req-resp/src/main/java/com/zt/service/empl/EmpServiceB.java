@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-// @Component //  将当前类交给IOC容器管理，成为IOC容器中的Bean
+@Component //  将当前类交给IOC容器管理，成为IOC容器中的Bean
 @Service
 public class EmpServiceB implements EmpService {
     @Autowired // 运行时，IOC容器会提供该类型的bean对象，并赋值给该变量 - 依赖注入
