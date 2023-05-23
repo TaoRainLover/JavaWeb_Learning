@@ -1,0 +1,60 @@
+package com.itheima.mapper;
+
+import com.itheima.pojo.Emp;
+import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Component
+@Mapper
+public interface EmpMapper {
+    // 根据 id 删除数据
+    @Delete("delete from emp where id = #{id}")
+    int delete(Integer id);
+
+    // 新增员工数据
+    @Options( keyProperty = "id", useGeneratedKeys = true)
+    @Insert("insert into emp(username, name, gender, image, job, entrydate, dept_id, create_time, update_time) " +
+            "values (#{username}, #{name}, #{gender}, #{image}, #{job}, #{entrydate}, #{deptId}, #{createTime}, #{updateTime})")
+    void insert(Emp emp);
+
+    // 更新员工数据
+    @Update("update emp set username = #{username}, name = #{name}, gender=#{gender}, image=#{image}," +
+            "job=#{job}, entrydate=#{entrydate}, dept_id=#{deptId}, update_time=#{updateTime} where id = #{id}")
+    void update(Emp emp);
+
+    // 动态更新员工数据
+    void update2(Emp emp);
+
+    // // 根据 ID 查询员工
+    @Select("select * from emp where id = #{id}")
+    Emp getById(Integer id);
+
+
+    // 根据 ID 查询员工
+    // 方案1 - 解决数据库字段名和对象属性名不一致的方法：给字段起别名，让别名与实体类属性一致
+    // @Select("select id, username, password, name, gender, image, job, entrydate," +
+    //         " dept_id deptId, create_time createTime, update_time updateTime from emp where id = #{id}")
+    // Emp getById(Integer id);
+
+
+    // 根据 ID 查询员工
+    // 方案2 - 解决数据库字段名和对象属性名不一致的方法：通过 @Results 注解手动映射封装
+    // @Results({
+    //         @Result(column = "dept_id", property = "deptId"),
+    //         @Result(column = "create_time", property = "createTime"),
+    //         @Result(column = "update_time", property = "updateTime"),
+    // })
+    // @Select("select * from emp where id = #{id}")
+    // Emp getById(Integer id);
+
+    // 条件查询员工
+    // @Select("select * from emp where name like concat('%', #{name}, '%') and gender=#{gender} and " +
+    //         "entrydate between #{begin} and #{end} order by update_time desc")
+    List<Emp> list(String name, Short gender, LocalDate begin, LocalDate end);
+
+    // 批量删除员工
+    public void deleteByIds(List<Integer> ids);
+}
